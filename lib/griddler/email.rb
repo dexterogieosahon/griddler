@@ -49,7 +49,7 @@ module Griddler
     end
 
     def extract_headers
-      EmailParser.extract_headers(params[:headers])
+      EmailParser.extract_headers(clean_invalid_utf8_bytes(params[:headers]))
     end
 
     def extract_cc_from_headers(headers)
@@ -73,7 +73,7 @@ module Griddler
     end
 
     def clean_invalid_utf8_bytes(text)
-      if !text.valid_encoding?
+      if text && !text.valid_encoding?
         text = text
           .force_encoding('ISO-8859-1')
           .encode('UTF-8')
